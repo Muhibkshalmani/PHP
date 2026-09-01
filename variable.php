@@ -8,4 +8,3 @@ $awais_kha ="the worpdress developer of metaa titans";
 echo $awais_kha . "<br>";
 echo $awais_kha . "<br>";
 ?>
-nfnhfnhxgjxgmjhxmjh
