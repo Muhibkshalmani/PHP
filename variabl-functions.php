@@ -14,4 +14,15 @@ $varfunc = "variable";
 
 echo $varfunc();
 
+
+// we can also assign the complete function to a variable and then print that varaible which is also called anonymous function 
+
+
+$ano = function (){
+echo " <br> hello this is another way to write the php varibale fucntion or anonymous function";
+
+};
+
+$ano();
+
 ?>
