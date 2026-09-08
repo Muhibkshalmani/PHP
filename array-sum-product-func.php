@@ -13,4 +13,5 @@ print_r($c);
 
 // to add integer values of an array or multiple theme..these functions are often use for that
 
+
 ?>
