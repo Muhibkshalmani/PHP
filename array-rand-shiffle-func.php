@@ -13,7 +13,7 @@ $result = array_rand($settings,2);
 print_r($result);
 
 
-//array shuffle function chanage array values position with refresh 
+//array shuffle function change array values position with refresh 
 
 echo "<br>";
 

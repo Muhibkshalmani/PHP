@@ -29,4 +29,7 @@ print_r($newArray);
 
 echo "</pre>";
 
+// array_fill function is worke when we want to have a new array with a function with own index and number values and also which value 
+
+
 ?>
