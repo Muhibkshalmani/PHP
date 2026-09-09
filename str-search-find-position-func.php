@@ -1,5 +1,5 @@
 <?php
-// str search and find postions functions are use to find and search a value or word inside the string value of a variable 
+// str find postions functions are use to find position of a  word inside the string value of a variable 
 
 $php = "I love php , php is more easy and understable langauge , php is a demanded language";
 
