@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert Student</title>
+
+    <style>
+        /* ----- Page style ----- */
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        /* ----- Form box ----- */
+        .box {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* ----- Message under the form ----- */
+        #message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Add Student</h1>
+
+    <!-- ----- The form ----- -->
+    <div class="box">
+        <form id="studentForm">
+            <label>Name</label>
+            <input type="text" id="name" placeholder="Enter name">
+
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Enter email">
+
+            <label>Phone</label>
+            <input type="text" id="phone" placeholder="Enter phone">
+
+            <button type="submit">Save</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <!-- ----- jQuery link ----- -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // ----- When the form is submitted -----
+        $("#studentForm").on("submit", function (event) {
+            event.preventDefault(); // stops the page from reloading
+
+            // ----- Put the form values in one object -----
+            var student = {
+                name: $("#name").val(),
+                email: $("#email").val(),
+                phone: $("#phone").val()
+            };
+
+            // ----- Send it to the API as JSON -----
+            $.ajax({
+                url: "insert-api.php",
+                type: "POST",
+                data: JSON.stringify(student),
+                success: function (response) {
+                    $("#message").text(response.message);
+
+                    // clear the form if it worked
+                    if (response.status == true) {
+                        $("#studentForm")[0].reset();
+                    }
+                },
+                error: function () {
+                    $("#message").text("Could not reach the API.");
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
