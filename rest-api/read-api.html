@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Students API</title>
+
+    <style>
+        /* ----- Page style ----- */
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        /* ----- Table style ----- */
+        table {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #4f46e5;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Student List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody id="studentTable"></tbody>
+    </table>
+
+    <!-- ----- jQuery link ----- -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // ----- Get the data from the API -----
+        $.ajax({
+            url: "api-fetch-all.php",
+            type: "GET",
+            success: function (data) {
+
+                // if there are no students, show the message
+                if (data.status == false) {
+                    $("#studentTable").html("<tr><td colspan='4'>" + data.message + "</td></tr>");
+                    return;
+                }
+
+                // ----- Add one row for each student -----
+                $.each(data, function (index, student) {
+                    $("#studentTable").append(
+                        "<tr>" +
+                        "<td>" + student.id + "</td>" +
+                        "<td>" + student.name + "</td>" +
+                        "<td>" + student.email + "</td>" +
+                        "<td>" + student.phone + "</td>" +
+                        "</tr>"
+                    );
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
