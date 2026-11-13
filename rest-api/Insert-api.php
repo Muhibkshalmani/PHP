@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 
-// ----- Get the database connection -----
+// -----  the database connection -----
 include "config.php";
 
 // ----- Read the data that was sent to us -----
