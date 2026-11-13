@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Manager</title>
+
+    <style>
+        /* ----- Colors used in the page ----- */
+        :root {
+            --main: #4f46e5;
+            --main-dark: #4338ca;
+            --light: #eef2ff;
+            --text: #1f2937;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        /* ----- Basic page style ----- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f4f6;
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* ----- Top banner ----- */
+        .header {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            text-align: center;
+            padding: 35px 20px 70px 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 8px 0 0 0;
+            opacity: 0.85;
+        }
+
+        /* ----- Main content area ----- */
+        .container {
+            max-width: 900px;
+            margin: -45px auto 40px auto;
+            padding: 0 15px;
+        }
+
+        /* ----- White cards ----- */
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin: 0 0 20px 0;
+            font-size: 20px;
+        }
+
+        /* ----- Form layout (3 boxes in one row) ----- */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fafafa;
+        }
+
+        /* glow when the user clicks inside a box */
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            border-color: var(--main);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        /* ----- Buttons ----- */
+        button {
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 11px 22px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.88;
+        }
+
+        .form-buttons {
+            margin-top: 20px;
+        }
+
+        .btn-save   { background: var(--main); }
+        .btn-cancel { background: #9ca3af; margin-left: 8px; }
+        .btn-edit   { background: #0ea5e9; padding: 7px 14px; font-size: 13px; }
+        .btn-delete { background: #ef4444; padding: 7px 14px; font-size: 13px; }
+
+        /* ----- Title row above the table ----- */
+        .table-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .table-top h2 {
+            margin: 0;
+        }
+
+        #count {
+            background: var(--light);
+            color: var(--main);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ----- Search box ----- */
+        #search {
+            margin-bottom: 20px;
+            padding: 12px 14px;
+        }
+
+        /* ----- Table style ----- */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f9fafb;
+            color: var(--gray);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #f9fafb;
+        }
+
+        /* ----- Round letter next to the name ----- */
+        .avatar {
+            display: inline-block;
+            width: 34px;
+            height: 34px;
+            line-height: 34px;
+            border-radius: 50%;
+            background: var(--light);
+            color: var(--main);
+            text-align: center;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+
+        .empty {
+            text-align: center;
+            color: var(--gray);
+            padding: 30px;
+        }
+
+        /* ----- Message that pops up at the top right ----- */
+        #message {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #16a34a;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        /* ----- Phone screens ----- */
+        @media (max-width: 700px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ----- Top banner ----- -->
+    <div class="header">
+        <h1>Student Manager</h1>
+        <p>Add, edit, search and delete students</p>
+    </div>
+
+    <!-- ----- Message shows here ----- -->
+    <div id="message"></div>
+
+    <div class="container">
+
+        <!-- ----- Form (used for adding and editing) ----- -->
+        <div class="card">
+            <h2 id="formTitle">Add Student</h2>
+
+            <form id="studentForm">
+                <input type="hidden" id="id">
+
+                <div class="form-row">
+                    <div>
+                        <label>Name</label>
+                        <input type="text" id="name" placeholder="e.g. Ali Khan">
+                    </div>
+
+                    <div>
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="e.g. ali@example.com">
+                    </div>
+
+                    <div>
+                        <label>Phone</label>
+                        <input type="text" id="phone" placeholder="e.g. 0300-1234567">
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn-save" id="saveBtn">Save</button>
+                    <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ----- Search box and table ----- -->
+        <div class="card">
+            <div class="table-top">
+                <h2>All Students</h2>
+                <span id="count">0 students</span>
+            </div>
+
+            <input type="text" id="search" placeholder="Search by name, email or phone...">
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ----- jQuery link ----- -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // ----- Show the students when the page opens -----
+        loadStudents();
+
+        // ----- READ and SEARCH: get the students from the API -----
+        function loadStudents() {
+            var word = $("#search").val().trim();
+
+            // if the search box is empty, get everyone, otherwise search
+            var url = "api-fetch-all.php";
+            if (word != "") {
+                url = "search-api.php";
+            }
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: { search: word },
+                success: function (data) {
+                    $("#studentTable").empty();
+
+                    // if the API sent a message, show it in the table
+                    if (data.status == false) {
+                        $("#count").text("0 students");
+                        var emptyRow = $("<tr>").append($("<td colspan='5' class='empty'>").text(data.message));
+                        $("#studentTable").append(emptyRow);
+                        return;
+                    }
+
+                    // show how many students we found
+                    if (data.length == 1) {
+                        $("#count").text("1 student");
+                    } else {
+                        $("#count").text(data.length + " students");
+                    }
+
+                    // ----- Add one row for each student -----
+                    $.each(data, function (index, student) {
+                        var row = $("<tr>");
+                        row.append($("<td>").text(student.id));
+
+                        // the name cell has a round letter and the name
+                        var letter = student.name.charAt(0).toUpperCase();
+                        var nameCell = $("<td>");
+                        nameCell.append($("<span class='avatar'>").text(letter));
+                        nameCell.append(document.createTextNode(student.name));
+                        row.append(nameCell);
+
+                        row.append($("<td>").text(student.email));
+                        row.append($("<td>").text(student.phone));
+
+                        // the edit button carries the student's data
+                        var editBtn = $("<button>").addClass("btn-edit").text("Edit")
+                            .attr("data-id", student.id)
+                            .attr("data-name", student.name)
+                            .attr("data-email", student.email)
+                            .attr("data-phone", student.phone);
+
+                        // the delete button only needs the id
+                        var deleteBtn = $("<button>").addClass("btn-delete").text("Delete")
+                            .attr("data-id", student.id);
+
+                        row.append($("<td>").append(editBtn, " ", deleteBtn));
+                        $("#studentTable").append(row);
+                    });
+                },
+                error: function () {
+                    showMessage("Could not reach the API.");
+                }
+            });
+        }
+
+        // ----- SEARCH: when the user types in the search box -----
+        $("#search").on("keyup", function () {
+            loadStudents();
+        });
+
+        // ----- CREATE or UPDATE: when the form is submitted -----
+        $("#studentForm").on("submit", function (event) {
+            event.preventDefault(); // stops the page from reloading
+
+            // ----- Put the form values in one object -----
+            var student = {
+                id: $("#id").val(),
+                name: $("#name").val(),
+                email: $("#email").val(),
+                phone: $("#phone").val()
+            };
+
+            // if the hidden id is empty we add, otherwise we update
+            var url = "insert-api.php";
+            var method = "POST";
+
+            if (student.id != "") {
+                url = "update-api.php";
+                method = "PUT";
+            }
+
+            // ----- Send it to the API as JSON -----
+            $.ajax({
+                url: url,
+                type: method,
+                data: JSON.stringify(student),
+                success: function (response) {
+                    showMessage(response.message);
+
+                    // clear the form and reload the table if it worked
+                    if (response.status == true) {
+                        resetForm();
+                        loadStudents();
+                    }
+                },
+                error: function () {
+                    showMessage("Could not reach the API.");
+                }
+            });
+        });
+
+        // ----- EDIT: put the row's data into the form -----
+        $("#studentTable").on("click", ".btn-edit", function () {
+            $("#id").val($(this).attr("data-id"));
+            $("#name").val($(this).attr("data-name"));
+            $("#email").val($(this).attr("data-email"));
+            $("#phone").val($(this).attr("data-phone"));
+
+            $("#formTitle").text("Edit Student");
+            $("#saveBtn").text("Update");
+
+            // go up to the form
+            window.scrollTo(0, 0);
+        });
+
+        // ----- DELETE: when a delete button is clicked -----
+        $("#studentTable").on("click", ".btn-delete", function () {
+
+            // ask before deleting
+            if (!confirm("Delete this student?")) {
+                return;
+            }
+
+            var student = {
+                id: $(this).attr("data-id")
+            };
+
+            $.ajax({
+                url: "delete-api.php",
+                type: "DELETE",
+                data: JSON.stringify(student),
+                success: function (response) {
+                    showMessage(response.message);
+                    loadStudents();
+                },
+                error: function () {
+                    showMessage("Could not reach the API.");
+                }
+            });
+        });
+
+        // ----- CANCEL button -----
+        $("#cancelBtn").on("click", function () {
+            resetForm();
+        });
+
+        // ----- Small helper functions -----
+        function resetForm() {
+            $("#studentForm")[0].reset();
+            $("#id").val("");
+            $("#formTitle").text("Add Student");
+            $("#saveBtn").text("Save");
+        }
+
+        function showMessage(text) {
+            $("#message").stop(true, true).text(text).show().delay(2500).fadeOut();
+        }
+    </script>
+
+</body>
+</html>
