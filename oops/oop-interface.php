@@ -2,7 +2,7 @@
 
 // interface: only method names, no code inside
 interface Payment {
-    public function pay($amount);
+   function pay($amount);
 }
 
 // each class MUST write pay(), in its own way
